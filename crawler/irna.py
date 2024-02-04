@@ -54,9 +54,10 @@ def get_irna():
         driver.get(link)
         urls_div = driver.find_element(By.CLASS_NAME, 'col-12.col-sm-8.main-content')
         all_links = urls_div.find_elements(By.TAG_NAME, 'a')
+        list_of_sub_link = set(list_of_sub_link)
         for i in all_links:
             if len(list_of_sub_link) < 50 :
-                list_of_sub_link.append(i.get_attribute('href'))
+                list_of_sub_link.add(i.get_attribute('href'))
             else:
                 break
     for j, i in enumerate(list_of_sub_link):
@@ -78,9 +79,10 @@ def get_irna():
         driver.get(link)
         urls_div = driver.find_element(By.CLASS_NAME, 'col-12.col-sm-8.main-content')
         all_links = urls_div.find_elements(By.TAG_NAME, 'a')
+        list_of_sub_link = set(list_of_sub_link)
         for i in all_links:
             if len(list_of_sub_link) < 50 :
-                list_of_sub_link.append(i.get_attribute('href'))
+                list_of_sub_link.add(i.get_attribute('href'))
             else:
                 break
     for j, i in enumerate(list_of_sub_link):
@@ -102,9 +104,10 @@ def get_irna():
         driver.get(link)
         urls_div = driver.find_element(By.CLASS_NAME, 'col-12.col-sm-8.main-content')
         all_links = urls_div.find_elements(By.TAG_NAME, 'a')
+        list_of_sub_link = set(list_of_sub_link)
         for i in all_links:
             if len(list_of_sub_link) < 50 :
-                list_of_sub_link.append(i.get_attribute('href'))
+                list_of_sub_link.add(i.get_attribute('href'))
             else:
                 break
     for j, i in enumerate(list_of_sub_link):
@@ -126,9 +129,10 @@ def get_irna():
         driver.get(link)
         urls_div = driver.find_element(By.CLASS_NAME, 'col-12.col-sm-8.main-content')
         all_links = urls_div.find_elements(By.TAG_NAME, 'a')
+        list_of_sub_link = set(list_of_sub_link)
         for i in all_links:
             if len(list_of_sub_link) < 50 :
-                list_of_sub_link.append(i.get_attribute('href'))
+                list_of_sub_link.add(i.get_attribute('href'))
             else:
                 break
     for j, i in enumerate(list_of_sub_link):
