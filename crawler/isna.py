@@ -59,7 +59,8 @@ def get_isna():
         try:
             driver.get(i)
             a = driver.find_element(By.CLASS_NAME, 'item-body.content-full-news').text
-            text_list.append(str(a))
+            if str(a) != '':
+                text_list.append(str(a))
         except:
             pass
     write_lists_to_csv_with_header(['culture']*len(text_list), text_list, csv_file_name= f'{os.path.dirname(__file__)}/isna/culture.csv')
@@ -84,7 +85,8 @@ def get_isna():
         try:
             driver.get(i)
             a = driver.find_element(By.CLASS_NAME, 'item-body.content-full-news').text
-            text_list.append(str(a))
+            if str(a) != '':
+                text_list.append(str(a))
         except:
             pass
     write_lists_to_csv_with_header(['politics']*len(text_list), text_list, csv_file_name= f'{os.path.dirname(__file__)}/isna/politics.csv')
@@ -109,7 +111,8 @@ def get_isna():
         try:
             driver.get(i)
             a = driver.find_element(By.CLASS_NAME, 'item-body.content-full-news').text
-            text_list.append(str(a))
+            if str(a) != '':
+                text_list.append(str(a))
         except:
             pass
     write_lists_to_csv_with_header(['sport']*len(text_list), text_list, csv_file_name= f'{os.path.dirname(__file__)}/isna/sport.csv')
@@ -134,7 +137,8 @@ def get_isna():
         try:
             driver.get(i)
             a = driver.find_element(By.CLASS_NAME, 'item-body.content-full-news').text
-            text_list.append(str(a))
+            if str(a) != '':
+                text_list.append(str(a))
         except:
             pass
     write_lists_to_csv_with_header(['economy']*len(text_list), text_list, csv_file_name= f'{os.path.dirname(__file__)}/isna/economy.csv')
