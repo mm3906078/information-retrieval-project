@@ -50,7 +50,7 @@ def get_isna():
         all_links = urls_div.find_elements(By.TAG_NAME, 'a')
         list_of_sub_link = set(list_of_sub_link)
         for i in all_links:
-            if len(list_of_sub_link) < 50 :
+            if len(list_of_sub_link) < 100 :
                 list_of_sub_link.add(i.get_attribute('href'))
             else:
                 break
@@ -61,7 +61,7 @@ def get_isna():
             a = driver.find_element(By.CLASS_NAME, 'item-body.content-full-news').text
             text_list.append(str(a))
         except:
-            text_list.append(f'{i} error')
+            pass
     write_lists_to_csv_with_header(['culture']*len(text_list), text_list, csv_file_name= f'{os.path.dirname(__file__)}/isna/culture.csv')
 
     list_of_sub_link = []
@@ -75,7 +75,7 @@ def get_isna():
         all_links = urls_div.find_elements(By.TAG_NAME, 'a')
         list_of_sub_link = set(list_of_sub_link)
         for i in all_links:
-            if len(list_of_sub_link) < 50 :
+            if len(list_of_sub_link) < 100 :
                 list_of_sub_link.add(i.get_attribute('href'))
             else:
                 break
@@ -86,7 +86,7 @@ def get_isna():
             a = driver.find_element(By.CLASS_NAME, 'item-body.content-full-news').text
             text_list.append(str(a))
         except:
-            text_list.append(f'{i} error')
+            pass
     write_lists_to_csv_with_header(['politics']*len(text_list), text_list, csv_file_name= f'{os.path.dirname(__file__)}/isna/politics.csv')
 
     list_of_sub_link = []
@@ -100,7 +100,7 @@ def get_isna():
         all_links = urls_div.find_elements(By.TAG_NAME, 'a')
         list_of_sub_link = set(list_of_sub_link)
         for i in all_links:
-            if len(list_of_sub_link) < 50 :
+            if len(list_of_sub_link) < 100 :
                 list_of_sub_link.add(i.get_attribute('href'))
             else:
                 break
@@ -111,7 +111,7 @@ def get_isna():
             a = driver.find_element(By.CLASS_NAME, 'item-body.content-full-news').text
             text_list.append(str(a))
         except:
-            text_list.append(f'{i} error')
+            pass
     write_lists_to_csv_with_header(['sport']*len(text_list), text_list, csv_file_name= f'{os.path.dirname(__file__)}/isna/sport.csv')
 
     list_of_sub_link = []
@@ -125,7 +125,7 @@ def get_isna():
         all_links = urls_div.find_elements(By.TAG_NAME, 'a')
         list_of_sub_link = set(list_of_sub_link)
         for i in all_links:
-            if len(list_of_sub_link) < 50 :
+            if len(list_of_sub_link) < 100 :
                 list_of_sub_link.add(i.get_attribute('href'))
             else:
                 break
@@ -136,7 +136,7 @@ def get_isna():
             a = driver.find_element(By.CLASS_NAME, 'item-body.content-full-news').text
             text_list.append(str(a))
         except:
-            text_list.append(f'{i} error')
+            pass
     write_lists_to_csv_with_header(['economy']*len(text_list), text_list, csv_file_name= f'{os.path.dirname(__file__)}/isna/economy.csv')
 
 
