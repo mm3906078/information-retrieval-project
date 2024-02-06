@@ -24,8 +24,16 @@ files = [
     'mehrnews/sport.csv'
 ]
 
+doc_category_map = []  # List to store the mapping of doc ID to category
+
 print("Reading crawled files...")
-docs = pd.concat([pd.read_csv("../crawler/" + file, nrows=50) for file in tqdm(files)])["Text"].tolist()
+docs = []
+for file in tqdm(files):
+    category = file.split('/')[1].split('.')[0]  # Extract category from the file name
+    df = pd.read_csv("../crawler/" + file, nrows=50)
+    for index, row in df.iterrows():
+        docs.append(row["Text"])
+        doc_category_map.append((len(docs) - 1, category))  # Map current doc ID to its category
 
 print("Preprocessing documents...")
 docs = [preprocess.preprocess(doc) for doc in tqdm(docs)]
@@ -38,3 +46,9 @@ print("Saving processed docs...")
 for i in trange(len(docs)):
     with open(f'docs/{i}.txt', 'w', encoding="utf-8") as doc_i:
         doc_i.write(str(docs[i]))
+
+# Save the doc ID to category mapping to a CSV file
+df_map = pd.DataFrame(doc_category_map, columns=['DocID', 'Category'])
+df_map.to_csv('doc_category_map.csv', index=False)
+
+print("Document-category mapping saved to doc_category_map.csv.")
