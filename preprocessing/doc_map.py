@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 import pandas as pd
 from tqdm import tqdm, trange
 import preprocess
+import os
 
 files = [
 	'hamshahri/culture.csv',
@@ -26,6 +29,10 @@ docs = pd.concat([pd.read_csv("../crawler/" + file, nrows=50) for file in tqdm(f
 
 print("Preprocessing documents...")
 docs = [preprocess.preprocess(doc) for doc in tqdm(docs)]
+
+# Check folder exist or create it
+if not os.path.exists('docs'):
+	os.makedirs('docs')
 
 print("Saving processed docs...")
 for i in trange(len(docs)):
