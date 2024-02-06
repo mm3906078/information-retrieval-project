@@ -59,6 +59,7 @@ if not labse:
 else:
 	from sentence_transformers import SentenceTransformer, util
 	model = SentenceTransformer('sentence-transformers/LaBSE')
+	query = "".join((token + " ") for token in query)
 	query_embedding = model.encode(query)
 	hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=5)[0]
 	for hit in hits:

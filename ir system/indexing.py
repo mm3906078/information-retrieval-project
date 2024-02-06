@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from tqdm import tqdm, trange
+
 N = 800
 Doc_id = int
 Token = str
@@ -56,7 +57,7 @@ def index():
 
 
 def normalize(bag: Bag_of_words) -> Bag_of_words:
-	norm = sum(x**2 for x in bag.values()) ** 0.5
+	norm = sum(x ** 2 for x in bag.values()) ** 0.5
 	bag = {term: weighted_frequency / norm for term, weighted_frequency in bag.items()}
 	return bag
 
@@ -68,11 +69,12 @@ def normalize_index():
 
 if __name__ == "__main__":
 	print("Reading processed documents...")
- 	corpus = [eval(open(f'../preprocessing/docs/{i}.txt', encoding="utf-8").read()) for i in trange(N)]
+	corpus = [eval(open(f'../preprocessing/docs/{i}.txt', encoding="utf-8").read()) for i in trange(N)]
 	if input("Select indexing method [T = tf-idf, l = LaBSE]: ") in ["l", "L", "LaBSE", "labse", "LABSE"]:
 		from sentence_transformers import SentenceTransformer
 
 		model = SentenceTransformer('sentence-transformers/LaBSE')
+		corpus = ["".join((token + " ") for token in doc) for doc in corpus]
 		corpus_embeddings = model.encode(corpus)
 		np.save("embeddings.npy", corpus_embeddings)
 	else:
