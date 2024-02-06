@@ -1,72 +1,66 @@
 #!/usr/bin/env python3
 
-import sys,os
-path = os.path.abspath('../')
-sys.path.append(path)
-
+import sys
+import os
 import math
 import numpy as np
-from tqdm import tqdm, trange
-from indexing import normalize, N, Doc_id, Token, Term, Frequency, Bag_of_words
+from tqdm import tqdm
+path = os.path.abspath('../')
+sys.path.append(path)
 import preprocessing.preprocess as preprocess
-labse = input("Select indexing method [T = tf-idf, l = LaBSE]: ") in ["l", "L", "LaBSE", "labse", "LABSE"]
-if labse:
-    corpus_embeddings = np.load("embeddings.npy")
-else:
-    fidx: dict[Token, dict[Doc_id, Frequency]] = eval(open(f'fidx.txt', encoding="utf-8").read())
-    idx: dict[Doc_id, Bag_of_words] = eval(open(f'idx.txt', encoding="utf-8").read())
 
+# Definitions
+Token = str
+Doc_id = int
+Frequency = int
+Bag_of_words = dict[Token, Frequency]
 
-def vectorize(query: list[Token]):
+# Function Definitions
+
+def normalize(wf: Bag_of_words) -> Bag_of_words:
+    norm = math.sqrt(sum(frequency ** 2 for frequency in wf.values()))
+    return {term: frequency / norm for term, frequency in wf.items()}
+
+def vectorize(query: list[Token]) -> Bag_of_words:
     bag: Bag_of_words = {}
     for token in query:
-        if token not in bag:
-            bag[token] = 1
-        else:
-            bag[token] += 1
+        bag[token] = bag.get(token, 0) + 1
     wf = {term: math.log1p(frequency) for term, frequency in bag.items()}
     return normalize(wf)
 
-
-def cosine_score(query: Bag_of_words, doc_id: Doc_id):
+def cosine_score(query: Bag_of_words, doc_id: Doc_id, idx: dict[Doc_id, Bag_of_words]) -> float:
     return sum(query[term] * (idx[doc_id][term] if term in idx[doc_id] else 0) for term in query)
 
-
-def Jaccard_score(query: Bag_of_words, doc_id: Doc_id):
-    q = set(query.keys())
-    d = set(idx[doc_id].keys())
-    return len(q & d) / len(q | d)
-
-
-def F_score(query: Bag_of_words, doc_id: Doc_id):
-    q = set(query.keys())
-    d = set(idx[doc_id].keys())
-    return 2 * len(q & d) / (len(d) + len(q))
-
-
-def Gaussian_RBF_kernel(distance: float):
+def Gaussian_RBF_kernel(distance: float) -> float:
     sigma = 1
     mu = 1
-    return math.exp(-0.5 * ((distance - mu) / sigma) ** 2)  # /(2*math.pi*sigma**2)**0.5
+    return math.exp(-0.5 * ((distance - mu) / sigma) ** 2)
 
-
-query = preprocess.preprocess(input("Enter the query: "))
-
-if not labse:
-    method = input("Enter scoring method [f = F-score, C = cosine, j = jaccard]: ")
-    score = cosine_score
-    if method == 'f':
-        score = F_score
-    if method == 'j':
-        score = Jaccard_score
-    scores = [(Gaussian_RBF_kernel(score(vectorize(query), doc_id)), doc_id) for doc_id in trange(N)]
+def tf_idf_top_doc(query: list[Token], idx: dict[Doc_id, Bag_of_words], N: int) -> tuple:
+    scores = [(Gaussian_RBF_kernel(cosine_score(vectorize(query), doc_id, idx)), doc_id) for doc_id in range(N)]
     scores.sort(reverse=True)
-    print(f"doc_id = {scores[0][1]} with score = {scores[0][0]}")
-else:
+    return scores[0]
+
+def labse_top_doc(query: str, corpus_embeddings) -> tuple:
     from sentence_transformers import SentenceTransformer, util
     model = SentenceTransformer('sentence-transformers/LaBSE')
-    query = "".join((token + " ") for token in query)
     query_embedding = model.encode(query)
-    hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=5)[0]
-    for hit in hits:
-        print(hit['corpus_id'], "(Score: {:.4f})".format(hit['score']))
+    hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=1)[0]
+    top_hit = hits[0]
+    return (top_hit['corpus_id'], top_hit['score'])
+
+# Main Execution
+labse_input = input("Select indexing method [T = tf-idf, l = LaBSE]: ").lower()
+query = preprocess.preprocess(input("Enter the query: "))
+query_str = " ".join(query)  # Used for LaBSE
+
+if labse_input in ["l", "labse"]:
+    corpus_embeddings = np.load("embeddings.npy")
+    top_doc_id, top_score = labse_top_doc(query_str, corpus_embeddings)
+    print(f"LaBSE top doc_id = {top_doc_id} with score = {top_score:.4f}")
+else:
+    fidx: dict[Token, dict[Doc_id, Frequency]] = eval(open(f'fidx.txt', encoding="utf-8").read())
+    idx: dict[Doc_id, Bag_of_words] = eval(open(f'idx.txt', encoding="utf-8").read())
+    N = len(idx)  # Assuming N is the total number of documents
+    top_score, top_doc_id = tf_idf_top_doc(query, idx, N)
+    print(f"TF-IDF top doc_id = {top_doc_id} with score = {top_score:.4f}")
