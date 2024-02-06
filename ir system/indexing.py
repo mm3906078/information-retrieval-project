@@ -68,7 +68,7 @@ def normalize_index():
 
 if __name__ == "__main__":
 	print("Reading processed documents...")
-	corpus = [eval(open(f'../preprocessing/{i}.txt', encoding="utf-8").read()) for i in trange(N)]
+ 	corpus = [eval(open(f'../preprocessing/docs/{i}.txt', encoding="utf-8").read()) for i in trange(N)]
 	if input("Select indexing method [T = tf-idf, l = LaBSE]: ") in ["l", "L", "LaBSE", "labse", "LABSE"]:
 		from sentence_transformers import SentenceTransformer
 

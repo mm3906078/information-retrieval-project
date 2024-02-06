@@ -29,5 +29,5 @@ docs = [preprocess.preprocess(doc) for doc in tqdm(docs)]
 
 print("Saving processed docs...")
 for i in trange(len(docs)):
-	with open(f'{i}.txt', 'w', encoding="utf-8") as doc_i:
+	with open(f'docs/{i}.txt', 'w', encoding="utf-8") as doc_i:
 		doc_i.write(str(docs[i]))
